@@ -1,10 +1,10 @@
 from sanic import Sanic
 from sanic.response import json
-from routes.user import user_bp
+from routes.v1.user import user_bp as user_bp_v1
 
 app = Sanic()
 
-app.blueprint(user_bp)
+app.blueprint(user_bp_v1)
 
 @app.route('/')
 async def test(request):

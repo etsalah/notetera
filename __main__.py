@@ -9,8 +9,7 @@ from routes.v1.note import note_bp as note_bp_v1
 from models.v1.base import create_engine
 from models.v1.base import create_db_entities
 from models.v1.base import create_session
-# from helpers import jwt_helper
-# import models.v1 as v1_models
+
 
 load_dotenv()
 

@@ -6,7 +6,7 @@ from sqlalchemy import DateTime
 class Label(Base):
     __tablename__ = 'label'
     id = Column('id', String(100), primary_key=True)
-    name = Column('name', Unicode(400), nullable=False, unique=True)
+    name = Column('name', Unicode(100), nullable=False, unique=True)
     created_by_id = Column(
         'created_by_id', String(100), ForeignKey('users.id'), nullable=False)
     created_at = Column(

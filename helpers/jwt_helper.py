@@ -3,6 +3,7 @@
 This module contains functions for generating and decoding jwt tokens. As well
 as code for handling the validity period for tokens in use in the application
 """
+import os
 from hashlib import md5
 from datetime import datetime, timedelta
 
@@ -18,9 +19,10 @@ from helpers.id_helper import generate_id
 __author__ = "edem.tsalah@gmail.com"
 
 # TODO: change this into a more secure token. Later move this into configure
-_SECRET = 'jwt_token_secret'
-_LOGIN_VALID_TIME_SPAN = timedelta(minutes=60)
-ALGORITHM = 'HS256'
+_SECRET = os.getenv('SECRET', 'jwt_token_secret')
+_LOGIN_VALID_TIME_SPAN = timedelta(
+    minutes=float(os.getenv('TOKEN_DURATION', '60')))
+ALGORITHM = os.getenv('ENCRYPT_ALGORITHM', 'HS256')
 TOKEN_FIELD = "token"  # the field in the json where jwt token is expected
 
 

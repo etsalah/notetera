@@ -18,7 +18,6 @@ from helpers.id_helper import generate_id
 
 __author__ = "edem.tsalah@gmail.com"
 
-# TODO: change this into a more secure token. Later move this into configure
 _SECRET = os.getenv('SECRET', 'jwt_token_secret')
 _LOGIN_VALID_TIME_SPAN = timedelta(
     minutes=float(os.getenv('TOKEN_DURATION', '60')))

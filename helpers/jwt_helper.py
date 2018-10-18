@@ -29,7 +29,7 @@ def get_token_checksum(token):
     return md5(bytes(token, "utf-8")).hexdigest()
 
 
-def encode_token(session_obj, data):
+def encode_token(data):
     """
     This function is responsible for encode the data that is passed to into a
     jwt token
@@ -65,7 +65,7 @@ def encode_token(session_obj, data):
 #         session_obj.commit()
 
 
-def decode_token(session_obj, params, token_field=None):
+def decode_token(params, token_field=None):
     """
     This function is used to decode the jwt token into the data that was used
     to generate it

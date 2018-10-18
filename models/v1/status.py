@@ -6,7 +6,7 @@ from sqlalchemy import Column, String, Unicode, ForeignKey, DateTime
 class Status(Base):
     __tablename__ = 'status'
     id = Column('id', String(100), primary_key=True)
-    name = Column('name', Unicode(500), nullable=False)
+    name = Column('name', Unicode(200), nullable=False, unique=True)
     created_by_id = Column(
         'created_by_id', String(100), ForeignKey('users.id'), nullable=False)
     created_at = Column(

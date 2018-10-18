@@ -9,6 +9,8 @@ sanic = "*"
 python-dotenv = "*"
 pymysql = "*"
 pyjwt = "*"
+sanic-cors = "*"
+sanic-plugins-framework = "*"
 
 [dev-packages]
 pylint = "*"

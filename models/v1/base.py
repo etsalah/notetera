@@ -38,6 +38,17 @@ def create_session(engine_instance):
     return Session()
 
 
+def create_session_from_conn_str(conn_str: str, echo=False):
+    """This function creates the session obj using the connection string that 
+    is passed to it
+
+    Args:
+        conn_str: valid sqlalchemy connection string
+        echo: indicates whether sql statements are printed to the console or not
+    """
+    return create_session(create_engine(conn_str, echo))
+
+
 def model_to_dict(model_obj, field_list):
     """This function is responsible for converting an instance of any of the
     modules into a dictionary

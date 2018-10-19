@@ -100,9 +100,9 @@ def update_by_id(
     ---------
     returns a raw instance of the model or a dictionary representing the model
     """
-    return command_helper.update_by_id(
-        session_obj, model_cls, model_cls.COLUMNS, [{"id": {"$eq": _id}}], data,
-        json_result
+    return update_by_params(
+        session_obj, model_cls, [{"id": {"$eq": _id}}], data,
+        json_result=json_result
     )
 
 
@@ -129,8 +129,15 @@ def update_by_params(
     returns raw instance or dictionary representing the raw instance based on
     json_result's value
     """
-    return command_helper.update_by_params(
-        session_obj, model_cls, model_cls.COLUMNS, params, data, json_result)
+    result = command_helper.update_by_params(
+        session_obj, model_cls, query_helper.find_by_params,
+        model_cls.COLUMNS, params, data
+    )
+
+    if json_result:
+        return result.dict()
+
+    return result
 
 
 def delete_by_id(
@@ -154,9 +161,9 @@ def delete_by_id(
     returns raw instance or dictionary representing the raw instance based on
     json_result's value
     """
-    return _delete_by_id(
-        session_obj, model_cls, model_cls.COLUMNS, _id, data,
-        json_result=json_result
+    return delete_by_params(
+        session_obj, model_cls, [{'id': {'$eq': _id}}],
+        data, json_result=json_result
     )
 
 
@@ -184,5 +191,12 @@ def delete_by_params(
     returns raw instance or dictionary representing the raw instance based on
     json_result's value
     """
-    return _delete_by_params(
-        session_obj, model_cls, model_cls.COLUMNS, params, data, json_result)
+    result = command_helper.delete_by_params(
+        session_obj, model_cls, model_cls.COLUMNS,
+        query_helper.find_by_params, params,
+        data
+    )
+
+    if json_result:
+        return result.dict()
+    return result

@@ -3,6 +3,8 @@ from functools import wraps
 from helpers import jwt_helper
 from helpers import param_helper
 from sanic.response import json
+from jwt.exceptions import ExpiredSignatureError
+
 
 def authenticate():
 
@@ -15,11 +17,16 @@ def authenticate():
             if not params or 'token' not in params:
                 return json(
                     {'message': 'you need to pass in access token'}, 401)
+            
+            try:
+                user_obj = jwt_helper.decode_token(params, 'token')
 
-            user_obj = jwt_helper.decode_token(params, 'token')
-
-            kwargs['user_obj'] = user_obj
-            return await f(request, *args, **kwargs)
+                kwargs['user_obj'] = user_obj
+                return await f(request, *args, **kwargs)
+            except ExpiredSignatureError:
+                return json({
+                    'message': 'Your login has expired, please login again'
+                }, 401)
 
         return decorated_function
 

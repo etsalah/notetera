@@ -21,7 +21,7 @@ load_dotenv()
 __author__ = "edem.tsalah@gmail.com"
 
 _SECRET = os.getenv('SECRET', 'jwt_token_secret')
-print(float(os.getenv('TOKEN_DURATION')))
+print(float(os.getenv('TOKEN_DURATION', '1')))
 _LOGIN_VALID_TIME_SPAN = timedelta(
     minutes=float(os.getenv('TOKEN_DURATION', '60')))
 ALGORITHM = os.getenv('ENCRYPT_ALGORITHM', 'HS256')

@@ -25,5 +25,5 @@ ujson==1.35
 uvloop==0.11.2
 websockets==5.0.1
 wrapt==1.10.11
--f git+https://gitlab.com/etsalah/sqlalchemy_query_helper.git
--f git+https://gitlab.com/etsalah/sqlalchemy_command_helper.git
+git+https://gitlab.com/etsalah/sqlalchemy_query_helper.git
+git+https://gitlab.com/etsalah/sqlalchemy_command_helper.git

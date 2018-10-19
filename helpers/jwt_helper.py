@@ -4,6 +4,7 @@ This module contains functions for generating and decoding jwt tokens. As well
 as code for handling the validity period for tokens in use in the application
 """
 import os
+from dotenv import load_dotenv
 from hashlib import md5
 from datetime import datetime, timedelta
 
@@ -15,10 +16,12 @@ from helpers.id_helper import generate_id
 # from models.token_use import TokenUse
 # from models.account import Account
 
+load_dotenv()
 
 __author__ = "edem.tsalah@gmail.com"
 
 _SECRET = os.getenv('SECRET', 'jwt_token_secret')
+print(float(os.getenv('TOKEN_DURATION')))
 _LOGIN_VALID_TIME_SPAN = timedelta(
     minutes=float(os.getenv('TOKEN_DURATION', '60')))
 ALGORITHM = os.getenv('ENCRYPT_ALGORITHM', 'HS256')
@@ -37,8 +40,10 @@ def encode_token(data):
     :param data: data to be used to generate jwt token
     :return: string representing the generated jwt token
     """
+    data.update({'exp': datetime.utcnow() + _LOGIN_VALID_TIME_SPAN})
     token = str(jwt.encode(data, _SECRET, algorithm=ALGORITHM)).lstrip(
         "b'").rstrip("'")
+    del data['exp']
     # save_token(session_obj, token)
     return token
 

@@ -110,3 +110,15 @@ def list_query(
     dictionaries
     """
     return query(session_obj, model_cls, params, pagination_args, json_result)
+
+
+def count(session_obj: SessionType, model_cls, params: List[Dict] = None):
+    """This function is responsible for returning a count of rows of a model 
+    that match a particular 
+    
+    Args:
+        session_obj: object used to interact with the database
+        model_cls: the class of the model whose records are to be counted
+        params: list of parameters that need to be counted
+    """
+    return query_helper.count(session_obj, model_cls, params)

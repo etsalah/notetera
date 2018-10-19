@@ -67,3 +67,11 @@ async def find_user(request, session_obj, user_obj, user_id):
     result = query_helper.find_by_id(session_obj, User, user_id, True)
     return json(result)
 
+
+@user_bp.get('/count')
+@inject_session()
+@authenticate()
+async def count(request, session_obj, user_obj):
+    params = param_helper.get_json(request, remove_token=True)
+    result = query_helper.count(session_obj, User, params)
+    return json(result)

@@ -61,7 +61,8 @@ async def login(request, session_obj):
                 }, 401)
     args = [
         {"username": {"$eq": params['username']}},
-        {"password": {"$eq": params['password']}}
+        {"password": {"$eq": params['password']}},
+        {"deleted_at": {"$eq": None}}
     ]
     result = query_helper.find_by_params(session_obj, User, args, True)
     if result:

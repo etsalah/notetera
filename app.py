@@ -12,10 +12,9 @@ from models.v1.base import create_session
 from sanic_cors import CORS
 
 load_dotenv()
-session_obj = None
+
 
 def init_app():
-    global session_obj
     conn_str = "mysql+pymysql://{0}:{1}@{2}/{3}".format(
         os.getenv('DB_USERNAME'), os.getenv('DB_PASSWORD'),
         os.getenv('DB_HOST'), os.getenv('DB_DATABASE')
@@ -37,7 +36,6 @@ ROUTES = [
 
 for route in ROUTES:
     app.blueprint(route)
-    route.session_obj = session_obj
 
 
 init_app()

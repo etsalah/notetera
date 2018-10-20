@@ -192,8 +192,8 @@ def delete_by_params(
     json_result's value
     """
     result = command_helper.delete_by_params(
-        session_obj, model_cls, model_cls.COLUMNS,
-        query_helper.find_by_params, params,
+        session_obj, model_cls,
+        query_helper.find_by_params, model_cls.COLUMNS, params,
         data
     )
 

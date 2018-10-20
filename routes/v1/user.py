@@ -21,9 +21,10 @@ user_bp = Blueprint('user_blue_print', url_prefix='/v1/user')
 @inject_session()
 async def user_index(request, session_obj, user_obj):
     params = param_helper.get_json(request, True)
+    filter_args = params.get('filters', [])
     pagination_args = param_helper.get_pagination_details(request)
     result = query_helper.list_query(
-        session_obj, User, params, pagination_args, True)
+        session_obj, User, filter_args, pagination_args, True)
     return json(result)
 
 
@@ -100,6 +101,21 @@ async def update_user(request, session_obj, user_obj):
             'limit', 'offset', 'sort'):
             data.update({field: params[field]})
     result = command_helper.update_by_params(
+        session_obj, User, filter_args, data, json_result=True)
+    session_obj.commit()
+    return json(result)
+
+
+@user_bp.delete('/')
+@inject_session()
+@authenticate()
+async def delete_user(request, session_obj, user_obj):
+    params = param_helper.get_json(request, remove_token=True)
+    filter_args = params.get('filters', []) # TODO: check if version is passed
+    data = {'deleted_at': datetime.utcnow(), 'ver': id_helper.generate_id()}
+    filter_args.append({'id': {'$eq': user_obj['id']}})
+    print(filter_args)
+    result = command_helper.delete_by_params(
         session_obj, User, filter_args, data, json_result=True)
     session_obj.commit()
     return json(result)

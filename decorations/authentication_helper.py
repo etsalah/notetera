@@ -3,7 +3,7 @@ from functools import wraps
 from helpers import jwt_helper
 from helpers import param_helper
 from sanic.response import json
-from jwt.exceptions import ExpiredSignatureError
+from jwt.exceptions import ExpiredSignatureError, DecodeError
 
 
 def authenticate():
@@ -26,7 +26,13 @@ def authenticate():
             except ExpiredSignatureError:
                 return json({
                     'message': 'Your login has expired, please login again'
-                }, 401)
+                    }, 401)
+            except DecodeError:
+                return json({
+                    'message': (
+                        'Your token is invalid, provide a valid token '
+                        'to proceed')
+                    }, 401)
 
         return decorated_function
 

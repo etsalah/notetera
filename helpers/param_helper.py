@@ -45,7 +45,7 @@ def get_json(request_obj, remove_token=False):
         if hasattr(request_obj, 'params'):
             result = request_obj.params
 
-    result = request_obj.json
+    result = request_obj.json or {}
 
     if remove_token and 'token' in result:
         del result['token']

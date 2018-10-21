@@ -10,6 +10,7 @@ from helpers import param_helper
 from helpers import id_helper
 from helpers import password_helper
 from helpers import jwt_helper
+from decorations.exception_helper import handle_exception
 from decorations.session_helper import inject_session
 from decorations.authentication_helper import authenticate
 
@@ -30,6 +31,7 @@ async def user_index(request, session_obj, user_obj):
 
 @user_bp.post('/')
 @inject_session()
+@handle_exception()
 async def save_user(request, session_obj):
     data = param_helper.get_json(request)
     _id = id_helper.generate_id()
@@ -46,6 +48,7 @@ async def save_user(request, session_obj):
 
 @user_bp.post('/login')
 @inject_session()
+@handle_exception()
 async def login(request, session_obj):
     params = param_helper.get_json(request)
     if 'password' in params:
@@ -74,6 +77,7 @@ async def login(request, session_obj):
 @user_bp.get('/<user_id>')
 @inject_session()
 @authenticate()
+@handle_exception()
 async def find_user(request, session_obj, user_obj, user_id):
     result = query_helper.find_by_id(session_obj, User, user_id, True)
     return json(result)
@@ -91,6 +95,7 @@ async def count(request, session_obj, user_obj):
 @user_bp.put('/')
 @inject_session()
 @authenticate()
+@handle_exception()
 async def update_user(request, session_obj, user_obj):
     params = param_helper.get_json(request, remove_token=True)
     filter_args = params.get('filters', [])  # TODO: check if version is passed
@@ -110,6 +115,7 @@ async def update_user(request, session_obj, user_obj):
 @user_bp.delete('/')
 @inject_session()
 @authenticate()
+@handle_exception()
 async def delete_user(request, session_obj, user_obj):
     params = param_helper.get_json(request, remove_token=True)
     filter_args = params.get('filters', []) # TODO: check if version is passed

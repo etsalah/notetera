@@ -27,7 +27,7 @@ def get_pagination_details(request_obj):
     }
 
 
-def get_json(request_obj, remove_token=False):
+def get_json(request_obj, remove_token=True):
     """
     This function is responsible for getting the json data that was sent with
     with a request or return an empty dict if no data is sent

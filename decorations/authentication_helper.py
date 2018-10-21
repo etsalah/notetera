@@ -12,7 +12,7 @@ def authenticate():
 
         @wraps(f)
         async def decorated_function(request, *args, **kwargs):
-            params = param_helper.get_json(request)
+            params = param_helper.get_json(request, remove_token=False)
 
             if not params or 'token' not in params:
                 return json(

@@ -14,12 +14,16 @@ from helpers import param_helper
 note_bp = Blueprint('note_blue_print', url_prefix='/v1/note')
 
 @note_bp.route('/')
-async def note_index(request):
+@inject_session()
+@authenticate()
+@handle_exception()
+async def note_index(request, session_obj, user_obj):
     params = param_helper.get_json(request)
     filters = params.get('filters', [])
+    filters.append({'created_by_id': {'$eq': user_obj['id']}})
     pagination_args = param_helper.get_pagination_details(request)
     result = query_helper.list_query(
-        session_obj, Status, filters, pagination_args, json_result=True)
+        session_obj, Note, filters, pagination_args, json_result=True)
     return json(result)
 
 
@@ -30,7 +34,8 @@ async def note_index(request):
 async def count_note(request, session_obj, user_obj):
     params = param_helper.get_json(request)
     filters = params.get('filters', [])
-    return json(query_helper.count(session_obj, Status, filters))
+    filters.append({'created_by_id': {"$eq": user_obj['id']}})
+    return json(query_helper.count(session_obj, Note, filters))
 
 
 @note_bp.get('/<note_id>')
@@ -44,7 +49,7 @@ async def find_note(request, session_obj, user_obj, note_id):
     ]
     return json(
         query_helper.find_by_params(
-            session_obj, Status, filters, json_result=True))
+            session_obj, Note, filters, json_result=True))
 
 
 @note_bp.put('/<note_id>')
@@ -63,7 +68,7 @@ async def update_note(request, session_obj, user_obj, note_id):
         if field not in ('id', 'ver', 'created_by_id'):
             data[field] = params[field]
     result = command_helper.update_by_params(
-        session_obj, Status, filters, data, json_result=True)
+        session_obj, Note, filters, data, json_result=True)
     session_obj.commit()
     return json(result)
 
@@ -85,7 +90,7 @@ async def delete_note(request, session_obj, user_obj, note_id):
         if field not in ('id', 'ver', 'name', 'created_by_id'):
             data[field] = params[field]
     result = command_helper.delete_by_params(
-        session_obj, Status, filters, data, json_result=True)
+        session_obj, Note, filters, data, json_result=True)
     session_obj.commit()
     return json(result)
 
@@ -102,7 +107,7 @@ async def create_note(request, session_obj, user_obj):
         'ver': _id, 'created_by_id': user_obj['id']
     })
     result = command_helper.save(
-        session_obj, Status, Status.COLUMNS, params, json_result=True)
+        session_obj, Note, Note.COLUMNS, params, json_result=True)
 
     session_obj.commit()
     return json(result)

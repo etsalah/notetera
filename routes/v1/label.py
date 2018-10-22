@@ -17,6 +17,7 @@ label_bp = Blueprint('label_blue_print', url_prefix='/v1/label')
 async def label_index(request, session_obj, user_obj):
     params = param_helper.get_json(request)
     filters = params.get('filters', [])
+    filters.append({'created_by_id': {"$eq": user_obj['id']}})
     pagination_args = param_helper.get_pagination_details(request)
     result = query_helper.list_query(
         session_obj, Label, filters, pagination_args, json_result=True)
@@ -30,6 +31,7 @@ async def label_index(request, session_obj, user_obj):
 async def count_label(request, session_obj, user_obj):
     params = param_helper.get_json(request)
     filters = params.get('filters', [])
+    filters.append({'created_by_id': {"$eq": user_obj['id']}})
     return json(query_helper.count(session_obj, Label, filters))
 
 

@@ -11,6 +11,38 @@ SUPPORTED_QUERY_OPERATORS = (
     '$ne', '$eq', '$in', '$nin', '$gt', '$gte', '$lt', '$lte'
 )
 
+""" This constant contains a dictionary that map fields that can be found on
+database rows that serve as foreign keys and have data attached to them in
+another table or row of the same table. The format of that dictionary is as
+follows
+
+{
+    'foreign_key_field_name': {
+        'cls': PrimaryEntityClass, 'label': 'name_of_object_on_data'
+    }
+}
+
+"""
+FIELD_MODEL_MAPPING = {}
+
+
+def map_model_fields(session_obj, records):
+    results = []
+    for row in records:
+        tmp = row.dict()
+
+        for key in FIELD_MODEL_MAPPING.keys():
+            if key in tmp:
+                tmp.update({
+                    FIELD_MODEL_MAPPING[key]['label']: find_by_id(
+                        session_obj, FIELD_MODEL_MAPPING[key]['cls'], tmp[key],
+                        json_result=True)
+                    })
+
+        results.append(tmp)
+
+    return results
+
 
 def query(
         session_obj: SessionType, model_cls,
@@ -40,7 +72,8 @@ def query(
     if not json_result:
         return result
 
-    return [row.dict() for row in result]
+    return map_model_fields(session_obj, result)
+    # return [row.dict() for row in result]
 
 
 def find_by_id(session_obj: SessionType, model_cls, _id, json_result=False):

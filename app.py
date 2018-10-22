@@ -9,6 +9,8 @@ from routes.v1.note import note_bp as note_bp_v1
 from models.v1.base import create_engine
 from models.v1.base import create_db_entities
 from models.v1.base import create_session
+from models.v1.user import User
+from helpers import query_helper
 from sanic_cors import CORS
 
 load_dotenv()
@@ -23,6 +25,10 @@ def init_app():
     db_engine = create_engine(conn_str, echo=True)
     session_obj = create_session(db_engine)
     create_db_entities(db_engine)
+
+    query_helper.FIELD_MODEL_MAPPING = {
+        'created_by_id': {'cls': User, 'label': 'created_by'}
+    }
 
 
 app = Sanic(__name__)

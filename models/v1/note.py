@@ -10,7 +10,7 @@ class Note(Base):
     created_at = Column(
         'created_at', DateTime, nullable=False, default=datetime.utcnow)
     updated_at = Column(
-        'updated_at', DateTime, nullable=False, onupdate=datetime.utcnow
+        'updated_at', DateTime, onupdate=datetime.utcnow
     )
     deleted_at = Column('deleted_at', DateTime)
     created_by_id = Column(

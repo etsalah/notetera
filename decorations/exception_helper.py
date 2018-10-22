@@ -25,7 +25,8 @@ def handle_exception():
 
             try:
                 return await f(request, *args, **kwargs)
-            except IntegrityError:
+            except IntegrityError as e:
+                print(e)
                 rollback(session_obj)
                 return json({
                     'message': (

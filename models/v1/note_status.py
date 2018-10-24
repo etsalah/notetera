@@ -7,11 +7,11 @@ from sqlalchemy import DateTime
 class NoteStatus(Base):
     __tablename__ = 'note_status'
     __table_args__ = (
-    	UniqueConstraint('label_id', 'note_id', name='uniq_note_status'),
+    	UniqueConstraint('status_id', 'note_id', name='uniq_note_status'),
     )
     id = Column('id', String(100), primary_key=True)
-    label_id = Column(
-    	'label_id', String(100), ForeignKey('label.id'), nullable=False)
+    status_id = Column(
+    	'status_id', String(100), ForeignKey('label.id'), nullable=False)
     note_id = Column(
     	'note_id', String(100), ForeignKey('note.id'), nullable=False)
     created_by_id = Column(
@@ -25,7 +25,7 @@ class NoteStatus(Base):
     ver = Column('ver', String(100), nullable=False)
 
     COLUMNS = (
-        'id', 'label_id', 'note_id', 'created_by_id', 'created_at',
+        'id', 'status_id', 'note_id', 'created_by_id', 'created_at',
         'updated_at', 'deleted_at', 'ver'
     )
 

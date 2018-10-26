@@ -7,6 +7,8 @@ class Note(Base):
     __tablename__ = 'note'
     id = Column('id', String(100), primary_key=True)
     content = Column('content', UnicodeText())
+    parent_note_id = Column(
+        'parent_note_id', String(100), nullable=True, index=True)
     created_at = Column(
         'created_at', DateTime, nullable=False, default=datetime.utcnow)
     updated_at = Column(
@@ -19,7 +21,7 @@ class Note(Base):
 
     COLUMNS = (
         'id', 'content', 'created_at', 'updated_at', 'deleted_at', 'ver',
-        'created_by_id'
+        'created_by_id', 'parent_note_id'
     )
 
     def dict(self):

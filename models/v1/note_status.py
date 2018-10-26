@@ -11,7 +11,7 @@ class NoteStatus(Base):
     )
     id = Column('id', String(100), primary_key=True)
     status_id = Column(
-    	'status_id', String(100), ForeignKey('label.id'), nullable=False)
+    	'status_id', String(100), ForeignKey('status.id'), nullable=False)
     note_id = Column(
     	'note_id', String(100), ForeignKey('note.id'), nullable=False)
     created_by_id = Column(

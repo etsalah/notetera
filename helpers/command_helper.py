@@ -38,6 +38,12 @@ def sanitize_data(fields: Iterable[str], data: Dict) -> Dict:
     return tmp
 
 
+def process_return_data(session_obj, obj, json_result=False):
+    if not json_result:
+        return obj
+    return query_helper.map_dict_fields(session_obj, obj.dict())    
+
+
 def save(
         session_obj: SessionType, model_cls, fields: Iterable[str],
         data: Dict, json_result: bool = False):
@@ -74,7 +80,7 @@ def save(
     session_obj.add(obj)
     if not json_result:
         return obj
-    return obj.dict()
+    return query_helper.map_dict_fields(session_obj, obj.dict())
 
 
 def update_by_id(
@@ -133,11 +139,11 @@ def update_by_params(
         session_obj, model_cls, query_helper.find_by_params,
         model_cls.COLUMNS, params, data
     )
+    return process_return_data(session_obj, result, json_result)
+    # if json_result:
+    #     return result.dict()
 
-    if json_result:
-        return result.dict()
-
-    return result
+    # return result
 
 
 def delete_by_id(
@@ -197,6 +203,7 @@ def delete_by_params(
         data
     )
 
-    if json_result:
-        return result.dict()
-    return result
+    return process_return_data(session_obj, result, json_result)
+    # if json_result:
+    #     return result.dict()
+    # return result

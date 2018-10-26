@@ -106,9 +106,41 @@ async def create_note(request, session_obj, user_obj):
         'created_at': datetime.utcnow(), 'id': _id,
         'ver': _id, 'created_by_id': user_obj['id']
     })
+
+    if 'parent_note_id' in params:
+
+        found_parent = query_helper.find_by_params(
+            session_obj, Note, [{'id': {'$eq': params['parent_note_id']}}],
+            json_result=True
+        )
+
+        if not found_parent:
+            return json({
+                'message': (
+                    'no parent note with id equal to {0} was found, '
+                    'try again'.format(params['parent_note_id'])
+                )
+            })
+
     result = command_helper.save(
         session_obj, Note, Note.COLUMNS, params, json_result=True)
 
     session_obj.commit()
     return json(result)
 
+
+@note_bp.get('/<note_id>/notes')
+@inject_session()
+@authenticate()
+@handle_exception()
+async def list_child_note(request, session_obj, user_obj, note_id):
+    params = param_helper.get_json(request)
+    filters = params.get('filters', [])
+    filters.extend([
+        {'parent_note_id': {'$eq': note_id}},
+        {'created_by_id': {'$eq': user_obj['id']}}
+    ])
+    pagination_args = param_helper.get_pagination_details(request)
+    result = query_helper.list_query(
+        session_obj, Note, filters, pagination_args, json_result=True)
+    return json(result)

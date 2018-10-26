@@ -48,7 +48,7 @@ async def count_note_label(request, session_obj, user_obj, note_id):
 @inject_session()
 @authenticate()
 @handle_exception()
-async def find_note_label(request, session_obj, user_obj, label_id):
+async def find_note_label(request, session_obj, user_obj, label_id, note_id):
     filters = [
         {'id': {'$eq': label_id}},
         {'created_by_id': {'$eq': user_obj['id']}}

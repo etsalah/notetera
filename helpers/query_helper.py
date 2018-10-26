@@ -25,22 +25,22 @@ follows
 """
 FIELD_MODEL_MAPPING = {}
 
+def map_dict_fields(session_obj, record_dict):
+    for key in FIELD_MODEL_MAPPING.keys():
+        if key in record_dict and record_dict[key] is not None:
+            record_dict.update({
+                FIELD_MODEL_MAPPING[key]['label']: find_by_id(
+                    session_obj, FIELD_MODEL_MAPPING[key]['cls'],
+                    record_dict[key],
+                    json_result=True)
+                })
+    return record_dict
 
-def map_model_fields(session_obj, records):
+
+def map_records_fields(session_obj, records):
     results = []
     for row in records:
-        tmp = row.dict()
-
-        for key in FIELD_MODEL_MAPPING.keys():
-            if key in tmp:
-                tmp.update({
-                    FIELD_MODEL_MAPPING[key]['label']: find_by_id(
-                        session_obj, FIELD_MODEL_MAPPING[key]['cls'], tmp[key],
-                        json_result=True)
-                    })
-
-        results.append(tmp)
-
+        results.append(map_dict_fields(session_obj, row.dict()))
     return results
 
 
@@ -72,7 +72,7 @@ def query(
     if not json_result:
         return result
 
-    return map_model_fields(session_obj, result)
+    return map_records_fields(session_obj, result)
     # return [row.dict() for row in result]
 
 
